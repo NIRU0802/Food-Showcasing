@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  Grid,
   Typography,
   Link as MuiLink,
   Divider,
@@ -9,6 +8,7 @@ import {
   Button,
   Container,
 } from "@mui/material";
+import {Grid} from "@mui/material/Grid";
 import Link from "next/link";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
