@@ -1,6 +1,6 @@
+"use client";
 import React from "react";
 import { Box, Typography, Container } from "@mui/material";
-import Grid from "@mui/material/Grid";
 import LocalDiningIcon from "@mui/icons-material/LocalDining";
 import DeliveryDiningIcon from "@mui/icons-material/DeliveryDining";
 import EmojiFoodBeverageIcon from "@mui/icons-material/EmojiFoodBeverage";
@@ -53,6 +53,7 @@ const Services: React.FC = () => {
       }}
     >
       <Container maxWidth="lg" id="services">
+        {/* Header */}
         <Box
           sx={{
             display: "flex",
@@ -81,57 +82,49 @@ const Services: React.FC = () => {
           </Typography>
         </Box>
 
-        <Grid container spacing={4} justifyContent="center">
+        {/* Services Cards Container */}
+        <Box
+          sx={{
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            gap: 4,
+          }}
+        >
           {services.map((service, index) => (
-            <Grid
-              item
-              xs={12}
-              sm={6}
-              md={4}
+            <Box
               key={index}
               sx={{
-                display: "flex",
-                justifyContent: "center",
+                p: 4,
+                background: "linear-gradient(135deg, #f8f9fa, #fff0f0)",
+                borderRadius: 2,
+                boxShadow: 1,
+                width: "100%",
+                maxWidth: 300,
+                textAlign: "center",
+                transition: "transform 0.3s",
+                "&:hover": {
+                  transform: "scale(1.05)",
+                  boxShadow: 3,
+                },
               }}
             >
-              <Box
-                sx={{
-                  p: 4,
-                  background: "linear-gradient(135deg, #f8f9fa, #fff0f0)",
-                  borderRadius: 2,
-                  boxShadow: 1,
-                  height: "100%",
-                  width: "100%",
-                  maxWidth: 300,
-                  textAlign: "center",
-                  transition: "transform 0.3s",
-                  "&:hover": {
-                    transform: "scale(1.05)",
-                    boxShadow: 3,
-                  },
-                }}
+              <Box sx={{ mb: 3, color: "black" }}>{service.icon}</Box>
+              <Typography
+                variant="h5"
+                fontWeight="bold"
+                gutterBottom
+                color="black"
+                sx={{ textTransform: "uppercase" }}
               >
-                <Box sx={{ mb: 3, color: "black" }}>{service.icon}</Box>
-                <Typography
-                  variant="h5"
-                  fontWeight="bold"
-                  gutterBottom
-                  color="black"
-                  textTransform={"uppercase"}
-                >
-                  {service.title}
-                </Typography>
-                <Typography
-                  className="capitalize"
-                  variant="body1"
-                  color="black"
-                >
-                  {service.description}
-                </Typography>
-              </Box>
-            </Grid>
+                {service.title}
+              </Typography>
+              <Typography variant="body1" color="black">
+                {service.description}
+              </Typography>
+            </Box>
           ))}
-        </Grid>
+        </Box>
       </Container>
     </Box>
   );
