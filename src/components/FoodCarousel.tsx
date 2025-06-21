@@ -29,7 +29,7 @@ const FullPageCarousel = () => {
     {
       id: 3,
       image:
-        "https://images.unsplash.com/photo-1656936632096-59fcacae533f?q=80",
+        "https://images.unsplash.com/photo-1656936632096-59fcacae533f?q=80https://images.unsplash.com/photo-1656936632096-59fcacae533f?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       title: "Iced Tea",
       description: "Iced Lemon Tea",
     },

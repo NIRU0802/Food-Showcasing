@@ -8,7 +8,7 @@ import {
   Button,
   Container,
 } from "@mui/material";
-import {Grid} from "@mui/material/Grid";
+import { Grid } from "@mui/material";
 import Link from "next/link";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
@@ -56,7 +56,7 @@ const Footer: React.FC = () => {
     >
       <Container maxWidth={false} sx={{ px: { xs: 2, sm: 4, md: 6 } }}>
         <Grid container spacing={6}>
-          <Grid item xs={12} md={4}>
+          <Grid xs={12} md={4}>
             <Typography variant="h5" fontWeight="bold" mb={4} color="white">
               Foodie
             </Typography>
