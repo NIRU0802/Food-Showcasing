@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Navbar from "../components/Navbar";
 import FoodCarousel from "../components/FoodCarousel";
 import FoodMenu from "@/components/FoodMenu";

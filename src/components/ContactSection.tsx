@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { TextField, Button, Typography, Paper, Box } from "@mui/material";
+import { TextField, Button, Typography, Box } from "@mui/material";
 
 const ContactSection: React.FC = () => {
   return (

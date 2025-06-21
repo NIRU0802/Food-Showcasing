@@ -11,7 +11,6 @@ import {
 } from "@mui/material";
 import Image from "next/image";
 import { menuData } from "../Data/menuData";
-
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";

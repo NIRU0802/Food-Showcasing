@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
@@ -9,7 +10,7 @@ import type { Swiper as SwiperType } from "swiper";
 import "../app/globals.css";
 
 const FullPageCarousel = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [, setCurrentIndex] = useState(0);
   const swiperRef = useRef<SwiperType | null>(null);
 
   const carouselItems = [
@@ -29,7 +30,7 @@ const FullPageCarousel = () => {
     {
       id: 3,
       image:
-        "https://images.unsplash.com/photo-1656936632096-59fcacae533f?q=80https://images.unsplash.com/photo-1656936632096-59fcacae533f?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1656936632096-59fcacae533f?q=80",
       title: "Iced Tea",
       description: "Iced Lemon Tea",
     },
@@ -42,26 +43,21 @@ const FullPageCarousel = () => {
     },
   ];
 
-  const handlePrev = () => {
-    swiperRef.current?.slidePrev();
-  };
-
-  const handleNext = () => {
-    swiperRef.current?.slideNext();
-  };
+  const handlePrev = () => swiperRef.current?.slidePrev();
+  const handleNext = () => swiperRef.current?.slideNext();
 
   return (
     <div className="relative w-full h-screen">
-      {/* Custom Arrows */}
+      {/* Navigation Arrows */}
       <button
         onClick={handlePrev}
-        className="absolute z-10 top-1/2 left-4 transform -translate-y-1/2 bg-red-600 text-white p-3 rounded-full hover:bg-red-700"
+        className="absolute z-10 top-1/2 left-4 transform -translate-y-1/2 bg-red-600 text-white p-3 rounded-full hover:bg-red-700 shadow-md"
       >
         ❮
       </button>
       <button
         onClick={handleNext}
-        className="absolute z-10 top-1/2 right-4 transform -translate-y-1/2 bg-red-600 text-white p-3 rounded-full hover:bg-red-700"
+        className="absolute z-10 top-1/2 right-4 transform -translate-y-1/2 bg-red-600 text-white p-3 rounded-full hover:bg-red-700 shadow-md"
       >
         ❯
       </button>
@@ -76,11 +72,11 @@ const FullPageCarousel = () => {
         pagination={{ clickable: true }}
         onSlideChange={(swiper) => setCurrentIndex(swiper.realIndex)}
         onSwiper={(swiper) => (swiperRef.current = swiper)}
-        className="mySwiper"
+        className="w-full h-screen"
       >
         {carouselItems.map((item) => (
           <SwiperSlide key={item.id}>
-            <div className="relative h-screen w-full">
+            <div className="relative w-full h-screen">
               <Image
                 src={item.image}
                 alt={item.title}
@@ -88,12 +84,12 @@ const FullPageCarousel = () => {
                 className="object-cover"
                 priority
               />
-              <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-                <div className="text-center text-white max-w-2xl px-4">
-                  <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 uppercase">
+              <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                <div className="text-center text-white px-4 max-w-2xl">
+                  <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 uppercase drop-shadow-lg">
                     {item.title}
                   </h1>
-                  <p className="text-xl sm:text-2xl mb-8 capitalize">
+                  <p className="text-xl sm:text-2xl mb-8 capitalize drop-shadow">
                     {item.description}
                   </p>
                 </div>
@@ -103,28 +99,14 @@ const FullPageCarousel = () => {
         ))}
       </Swiper>
 
-      {/* Custom Red Pagination Dots */}
-      <div className="custom-pagination absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2" />
-
-      {/* Styles for Red Dots */}
-      <style jsx>{`
-        .custom-bullet {
-          width: 12px;
-          height: 12px;
-          border-radius: 9999px;
-          background-color: #fca5a5; /* red-300 */
-          cursor: pointer;
-          margin: 0 4px;
-        }
-        .custom-bullet-active {
-          background-color: #dc2626; /* red-600 */
-        }
+      {/* Pagination Dot Styles */}
+      <style jsx global>{`
         .swiper-pagination-bullet {
-          background-color: #fca5a5; /* red-300 */
-          opacity: 1;
+          background-color: #fca5a5 !important;
+          opacity: 1 !important;
         }
         .swiper-pagination-bullet-active {
-          background-color: #dc2626; /* red-600 */
+          background-color: #dc2626 !important;
         }
       `}</style>
     </div>
