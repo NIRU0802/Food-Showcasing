@@ -54,3 +54,17 @@ body::-webkit-scrollbar-thumb {
     scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
   }
 }
+
+/* Red Swiper pagination dots */
+.swiper-pagination-bullet {
+  width: 12px;
+  height: 12px;
+  background-color: #fca5a5;
+  /* red-300 */
+  opacity: 1;
+}
+
+.swiper-pagination-bullet-active {
+  background-color: #dc2626;
+  /* red-600 */
+}

@@ -1,11 +1,16 @@
 "use client";
-import { useState } from "react";
-import { Carousel } from "react-responsive-carousel";
-import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { useState, useRef } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Pagination } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/pagination";
 import Image from "next/image";
+import type { Swiper as SwiperType } from "swiper";
+import "../app/globals.css";
 
 const FullPageCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const swiperRef = useRef<SwiperType | null>(null);
 
   const carouselItems = [
     {
@@ -38,15 +43,11 @@ const FullPageCarousel = () => {
   ];
 
   const handlePrev = () => {
-    setCurrentIndex((prev) =>
-      prev === 0 ? carouselItems.length - 1 : prev - 1
-    );
+    swiperRef.current?.slidePrev();
   };
 
   const handleNext = () => {
-    setCurrentIndex((prev) =>
-      prev === carouselItems.length - 1 ? 0 : prev + 1
-    );
+    swiperRef.current?.slideNext();
   };
 
   return (
@@ -65,55 +66,67 @@ const FullPageCarousel = () => {
         ❯
       </button>
 
-      {/* Carousel */}
-      <Carousel
-        selectedItem={currentIndex}
-        onChange={(index) => setCurrentIndex(index)}
-        showThumbs={false}
-        showStatus={false}
-        showArrows={false}
-        showIndicators={false}
-        infiniteLoop
-        autoPlay
-        interval={5000}
-        stopOnHover={false}
-        transitionTime={1000}
+      {/* Swiper Carousel */}
+      <Swiper
+        modules={[Autoplay, Pagination]}
+        slidesPerView={1}
+        loop
+        autoplay={{ delay: 5000, disableOnInteraction: false }}
+        speed={1000}
+        pagination={{ clickable: true }}
+        onSlideChange={(swiper) => setCurrentIndex(swiper.realIndex)}
+        onSwiper={(swiper) => (swiperRef.current = swiper)}
+        className="mySwiper"
       >
         {carouselItems.map((item) => (
-          <div key={item.id} className="relative h-screen w-full">
-            <Image
-              src={item.image}
-              alt={item.title}
-              fill
-              className="object-cover"
-              priority
-            />
-            <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-              <div className="text-center text-white max-w-2xl px-4">
-                <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 uppercase">
-                  {item.title}
-                </h1>
-                <p className="text-xl sm:text-2xl mb-8 capitalize">
-                  {item.description}
-                </p>
+          <SwiperSlide key={item.id}>
+            <div className="relative h-screen w-full">
+              <Image
+                src={item.image}
+                alt={item.title}
+                fill
+                className="object-cover"
+                priority
+              />
+              <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                <div className="text-center text-white max-w-2xl px-4">
+                  <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 uppercase">
+                    {item.title}
+                  </h1>
+                  <p className="text-xl sm:text-2xl mb-8 capitalize">
+                    {item.description}
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
+          </SwiperSlide>
         ))}
-      </Carousel>
+      </Swiper>
 
-      {/* Custom Pagination Dots */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2">
-        {carouselItems.map((_, index) => (
-          <span
-            key={index}
-            onClick={() => setCurrentIndex(index)}
-            className={`w-3 h-3 rounded-full cursor-pointer ${
-              currentIndex === index ? "bg-red-600" : "bg-red-300"
-            }`}
-          />
-        ))}
-      </div>
+      {/* Custom Red Pagination Dots */}
+      <div className="custom-pagination absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2" />
+
+      {/* Styles for Red Dots */}
+      <style jsx>{`
+        .custom-bullet {
+          width: 12px;
+          height: 12px;
+          border-radius: 9999px;
+          background-color: #fca5a5; /* red-300 */
+          cursor: pointer;
+          margin: 0 4px;
+        }
+        .custom-bullet-active {
+          background-color: #dc2626; /* red-600 */
+        }
+        .swiper-pagination-bullet {
+          background-color: #fca5a5; /* red-300 */
+          opacity: 1;
+        }
+        .swiper-pagination-bullet-active {
+          background-color: #dc2626; /* red-600 */
+        }
+      `}</style>
     </div>
   );
 };

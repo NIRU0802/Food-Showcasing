@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   Card,
   CardMedia,
@@ -10,17 +10,24 @@ import {
   Box,
 } from "@mui/material";
 import Image from "next/image";
-import { Carousel } from "react-responsive-carousel";
-import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { menuData } from "../Data/menuData";
+
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import type { Swiper as SwiperType } from "swiper";
 
 const FoodMenu: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string>("Pizza");
-  const [currentSlide, setCurrentSlide] = useState<number>(0); // Track active slide
+  const [currentSlide, setCurrentSlide] = useState<number>(0);
+
+  const swiperRef = useRef<SwiperType | null>(null);
 
   const handleCategoryChange = (newCategory: string) => {
     setActiveCategory(newCategory);
-    setCurrentSlide(0); // reset slide on category change
+    setCurrentSlide(0);
+    swiperRef.current?.slideTo(0);
   };
 
   const getCurrentItems = () =>
@@ -84,111 +91,100 @@ const FoodMenu: React.FC = () => {
           ))}
         </Box>
 
-        {/* Mobile View: Carousel with arrows and manual pagination */}
+        {/* ✅ Mobile View: Swiper Carousel */}
         <div className="relative block md:hidden">
-          <Carousel
-            selectedItem={currentSlide}
-            onChange={(index) => setCurrentSlide(index)}
-            showThumbs={false}
-            showStatus={false}
-            showIndicators={false} // hide default indicators
-            infiniteLoop
-            autoPlay
-            interval={3500}
-            swipeable
-            emulateTouch
-            renderArrowPrev={(onClickHandler, hasPrev, label) =>
-              hasPrev && (
-                <button
-                  type="button"
-                  onClick={onClickHandler}
-                  title={label}
-                  className="absolute -left-0 top-1/2 z-10 -translate-y-1/2 bg-red-600 text-white rounded-full p-2 hover:bg-red-700"
-                >
-                  ❮
-                </button>
-              )
-            }
-            renderArrowNext={(onClickHandler, hasNext, label) =>
-              hasNext && (
-                <button
-                  type="button"
-                  onClick={onClickHandler}
-                  title={label}
-                  className="absolute -right-0 top-1/2 z-10 -translate-y-1/2 bg-red-600 text-white rounded-full p-2 hover:bg-red-700"
-                >
-                  ❯
-                </button>
-              )
-            }
+          <Swiper
+            modules={[Navigation]}
+            slidesPerView={1}
+            onSlideChange={(swiper) => setCurrentSlide(swiper.realIndex)}
+            navigation={{
+              nextEl: ".swiper-button-next-custom",
+              prevEl: ".swiper-button-prev-custom",
+            }}
+            loop
+            speed={500}
+            onSwiper={(swiper) => (swiperRef.current = swiper)}
           >
             {items.map((item) => (
-              <div key={item.id} className="px-4">
-                <Card
-                  sx={{
-                    height: "100%",
-                    transition: "transform 0.3s",
-                    "&:hover": {
-                      transform: "scale(1.03)",
-                      boxShadow: 3,
-                      "& .MuiTypography-root": {
-                        color: "black",
-                        fontWeight: "bold",
+              <SwiperSlide key={item.id}>
+                <div className="px-4">
+                  <Card
+                    sx={{
+                      height: "100%",
+                      transition: "transform 0.3s",
+                      "&:hover": {
+                        transform: "scale(1.03)",
+                        boxShadow: 3,
+                        "& .MuiTypography-root": {
+                          color: "black",
+                          fontWeight: "bold",
+                        },
                       },
-                    },
-                    border: "1px solid",
-                    borderColor: "error.light",
-                  }}
-                >
-                  <CardMedia sx={{ position: "relative", height: 200 }}>
-                    <Image
-                      src={item.image}
-                      alt={item.name}
-                      fill
-                      style={{ objectFit: "cover" }}
-                      priority
-                    />
-                  </CardMedia>
-                  <CardContent>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        mb: 1,
-                      }}
-                    >
-                      <Typography variant="h6">{item.name}</Typography>
-                      <Chip
-                        label={`₹${item.price.toFixed(2)}`}
-                        color="error"
-                        size="small"
+                      border: "1px solid",
+                      borderColor: "error.light",
+                    }}
+                  >
+                    <CardMedia sx={{ position: "relative", height: 200 }}>
+                      <Image
+                        src={item.image}
+                        alt={item.name}
+                        fill
+                        style={{ objectFit: "cover" }}
+                        priority
                       />
+                    </CardMedia>
+                    <CardContent>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          mb: 1,
+                        }}
+                      >
+                        <Typography variant="h6">{item.name}</Typography>
+                        <Chip
+                          label={`₹${item.price.toFixed(2)}`}
+                          color="error"
+                          size="small"
+                        />
+                      </Box>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ mb: 2 }}
+                      >
+                        {item.description}
+                      </Typography>
+                    </CardContent>
+                    <Box sx={{ p: 2 }}>
+                      <Button fullWidth variant="contained" color="error">
+                        Add to Cart
+                      </Button>
                     </Box>
-                    <Typography
-                      variant="body2"
-                      color="text.secondary"
-                      sx={{ mb: 2 }}
-                    >
-                      {item.description}
-                    </Typography>
-                  </CardContent>
-                  <Box sx={{ p: 2 }}>
-                    <Button fullWidth variant="contained" color="error">
-                      Add to Cart
-                    </Button>
-                  </Box>
-                </Card>
-              </div>
+                  </Card>
+                </div>
+              </SwiperSlide>
             ))}
-          </Carousel>
+          </Swiper>
 
-          {/* 🔴 Manual Pagination Outside the Carousel */}
+          {/* Custom Red Arrows */}
+          <button className="swiper-button-prev-custom absolute -left-3 top-1/2 z-10 -translate-y-1/2 bg-red-600 text-white rounded-full p-2 hover:bg-red-700">
+            ❮
+          </button>
+          <button className="swiper-button-next-custom absolute -right-3 top-1/2 z-10 -translate-y-1/2 bg-red-600 text-white rounded-full p-2 hover:bg-red-700">
+            ❯
+          </button>
+
+          {/* Manual Pagination Dots */}
           <div className="flex justify-center mt-6">
             {items.map((_, index) => (
               <span
                 key={index}
-                onClick={() => setCurrentSlide(index)}
+                onClick={() => {
+                  setCurrentSlide(index);
+                  swiperRef.current?.slideToLoop(index);
+                }}
                 className={`w-3 h-3 mx-1 rounded-full cursor-pointer transition-colors ${
                   currentSlide === index ? "bg-red-600" : "bg-red-300"
                 }`}
@@ -197,7 +193,7 @@ const FoodMenu: React.FC = () => {
           </div>
         </div>
 
-        {/* Desktop View: Grid Layout */}
+        {/* ✅ Desktop View: Grid Layout */}
         <Box
           className="hidden md:grid"
           sx={{

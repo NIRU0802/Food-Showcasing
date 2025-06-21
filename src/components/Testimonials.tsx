@@ -1,8 +1,11 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Box, Typography, Avatar } from "@mui/material";
-import { Carousel } from "react-responsive-carousel";
-import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper/modules";
+import type { Swiper as SwiperType } from "swiper";
+import "swiper/css";
+import "swiper/css/navigation";
 
 // Testimonial data
 const testimonials = [
@@ -67,6 +70,7 @@ const groupTestimonials = (arr: typeof testimonials, size: number) => {
 
 const Testimonials: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const swiperRef = useRef<SwiperType | null>(null);
   const grouped = groupTestimonials(testimonials, 4);
 
   return (
@@ -88,94 +92,74 @@ const Testimonials: React.FC = () => {
       </Typography>
 
       <Box className="relative">
-        <Carousel
-          selectedItem={currentSlide}
-          onChange={(index) => setCurrentSlide(index)}
-          showThumbs={false}
-          showStatus={false}
-          showIndicators={false}
-          infiniteLoop
-          autoPlay
-          interval={6000}
-          swipeable
-          emulateTouch
-          renderArrowPrev={(onClickHandler, hasPrev) =>
-            hasPrev && (
-              <button
-                type="button"
-                onClick={onClickHandler}
-                className="absolute left-0 top-1/2 z-10 -translate-y-1/2 bg-red-600 text-white rounded-full p-2 hover:bg-red-700"
-              >
-                ❮
-              </button>
-            )
-          }
-          renderArrowNext={(onClickHandler, hasNext) =>
-            hasNext && (
-              <button
-                type="button"
-                onClick={onClickHandler}
-                className="absolute right-0 top-1/2 z-10 -translate-y-1/2 bg-red-600 text-white rounded-full p-2 hover:bg-red-700"
-              >
-                ❯
-              </button>
-            )
-          }
+        <Swiper
+          modules={[Navigation]}
+          navigation={{
+            prevEl: ".swiper-button-prev-custom",
+            nextEl: ".swiper-button-next-custom",
+          }}
+          loop
+          speed={800}
+          onSlideChange={(swiper) => setCurrentSlide(swiper.realIndex)}
+          onSwiper={(swiper) => (swiperRef.current = swiper)}
         >
           {grouped.map((group, groupIndex) => (
-            <div
-              key={groupIndex}
-              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 px-4 md:px-8"
-            >
-              {group.map((t, i) => (
-                <Box
-                  key={i}
-                  className="bg-white rounded-xl shadow-md p-6 border border-red-100 hover:shadow-lg transition duration-300 flex flex-col items-center text-center"
-                >
-                  {/* Avatar */}
-                  <Avatar
-                    src={t.avatar}
-                    alt={t.name}
-                    sx={{ width: 70, height: 70, mb: 2 }}
-                  />
-
-                  {/* Name */}
-                  <Typography
-                    variant="subtitle1"
-                    fontWeight="bold"
-                    color="error"
-                    className="mb-1"
+            <SwiperSlide key={groupIndex}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 px-4 md:px-8">
+                {group.map((t, i) => (
+                  <Box
+                    key={i}
+                    className="bg-white rounded-xl shadow-md p-6 border border-red-100 hover:shadow-lg transition duration-300 flex flex-col items-center text-center"
                   >
-                    {t.name}
-                  </Typography>
-
-                  {/* Star Rating */}
-                  <Box className="flex justify-center mb-2 text-red-500 text-lg">
-                    {[...Array(5)].map((_, idx) => (
-                      <span key={idx}>{idx < t.rating ? "★" : "☆"}</span>
-                    ))}
+                    <Avatar
+                      src={t.avatar}
+                      alt={t.name}
+                      sx={{ width: 70, height: 70, mb: 2 }}
+                    />
+                    <Typography
+                      variant="subtitle1"
+                      fontWeight="bold"
+                      color="error"
+                      className="mb-1"
+                    >
+                      {t.name}
+                    </Typography>
+                    <Box className="flex justify-center mb-2 text-red-500 text-lg">
+                      {[...Array(5)].map((_, idx) => (
+                        <span key={idx}>{idx < t.rating ? "★" : "☆"}</span>
+                      ))}
+                    </Box>
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      sx={{ fontStyle: "italic", fontWeight: 500 }}
+                    >
+                      “{t.message}”
+                    </Typography>
                   </Box>
-
-                  {/* Message */}
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    sx={{ fontStyle: "italic", fontWeight: 500 }}
-                  >
-                    “{t.message}”
-                  </Typography>
-                </Box>
-              ))}
-            </div>
+                ))}
+              </div>
+            </SwiperSlide>
           ))}
-        </Carousel>
+        </Swiper>
 
-        {/* Red Pagination Dots */}
+        {/* Custom Red Arrows */}
+        <button className="swiper-button-prev-custom absolute left-1 top-1/2 z-10 -translate-y-1/2 bg-red-600 text-white rounded-full p-2 hover:bg-red-700">
+          ❮
+        </button>
+        <button className="swiper-button-next-custom absolute right-1 top-1/2 z-10 -translate-y-1/2 bg-red-600 text-white rounded-full p-2 hover:bg-red-700">
+          ❯
+        </button>
+
+        {/* Manual Pagination Dots */}
         <Box className="flex justify-center mt-6">
           {grouped.map((_, idx) => (
             <span
               key={idx}
-              onClick={() => setCurrentSlide(idx)}
+              onClick={() => {
+                setCurrentSlide(idx);
+                swiperRef.current?.slideToLoop(idx);
+              }}
               className={`w-3 h-3 mx-1 rounded-full cursor-pointer transition-all ${
                 currentSlide === idx
                   ? "bg-red-600"
